@@ -1,10 +1,16 @@
-export default function ProductCard() {
+import "./productCard.css"
+export default function ProductCard(props) {
+
+  console.log(props);
   return (
-    <div>
+    <div className="product-card">
       <h1>Product Card</h1>
-      <img src="https://i.pinimg.com/736x/de/82/09/de8209bcd84518226d28b7ed0a31d1e1.jpg"></img>
-      <span>dram</span>
- <span>LKR. 800</span>   </div>
+      <img src={ props.photoUrl}></img>
+      <span>{props.name}</span>
+ <span>LKR. {props.price}</span>  
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, animi.</p>
+ 
+      <p>{ props.description}</p>   </div>
   );
 }
 
