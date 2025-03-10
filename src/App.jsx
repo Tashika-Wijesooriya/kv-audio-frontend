@@ -1,14 +1,16 @@
 
 import './App.css'
+import ProductCard from './assets/components/productCard'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-     
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
     </>
-  )
+  );
 }
 
 export default App
