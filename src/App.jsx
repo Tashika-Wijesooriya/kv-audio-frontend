@@ -1,30 +1,39 @@
-import "./App.css";
-import ProductCard from "./assets/components/ProductCard";
+import { useState } from "react";
+import { BsGraphDown } from "react-icons/bs";
+import { FaRegBookmark } from "react-icons/fa";
+import { MdOutlineSpeakerGroup } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
 
 function App() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log("Logging in with:", email, password);
+    // Add authentication logic here
+  };
+
   return (
-    <>
-      <ProductCard
-        photoUrl="https://i.pinimg.com/736x/de/82/09/de8209bcd84518226d28b7ed0a31d1e1.jpg"
-        name="Dram"
-        price="800"
-        description="A high-quality product with great value."
-      />
-      <br />
-      <ProductCard
-        photoUrl="https://i.pinimg.com/736x/c6/5b/6a/c65b6ade69a4cae103c07b69449a5549.jpg"
-        name="Dram Premium"
-        price="1200"
-        description="An enhanced version of the original product."
-      />
-      <br />
-      <ProductCard
-        photoUrl="https://i.pinimg.com/736x/4d/3c/2a/4d3c2a4b3e2f5abbb247ea8fae0a046a.jpg"
-        name="Dram Exclusive"
-        price="1500"
-        description="Top-tier quality for the best experience."
-      />
-    </>
+    <div className="w-full h-screen flex">
+      <div className="w-[400px] h-full bg-gray-200">
+        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+          <BsGraphDown />
+          Dashboard
+        </button>
+        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+          <FaRegBookmark />
+          Booking
+        </button>
+        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+          <MdOutlineSpeakerGroup /> Items
+        </button>
+        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+          <FaRegUser /> Users
+        </button>
+      </div>
+      <div className="w-full bg-red-200"></div>
+    </div>
   );
 }
 
