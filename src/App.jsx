@@ -1,23 +1,12 @@
-import { useState } from "react";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminPage from "./assets/components/adminPage";
-import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Logging in with:", email, password);
-    // Add authentication logic here
-  };
-
   return (
     <BrowserRouter>
-      <div>
-        <AdminPage />
-      </div>
+      <Routes path="/*">
+        <Route path="/admin/*" element={<AdminPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }

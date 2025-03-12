@@ -2,6 +2,7 @@ import { BsGraphDown } from "react-icons/bs";
 import { FaRegBookmark } from "react-icons/fa";
 import { MdOutlineSpeakerGroup } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
+import { Route, Routes, Link } from "react-router-dom";
 export default function AdminPage() {
   return (
     <div className="w-full h-screen flex">
@@ -10,18 +11,33 @@ export default function AdminPage() {
           <BsGraphDown />
           Dashboard
         </button>
-        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+        <Link
+          to="/admin/booking"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
           <FaRegBookmark />
           Booking
-        </button>
-        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+        </Link>
+        <Link
+          to="/admin/items"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
           <MdOutlineSpeakerGroup /> Items
-        </button>
-        <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+        </Link>
+        <Link
+          to="/admin/users"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
           <FaRegUser /> Users
-        </button>
+        </Link>
       </div>
-      <div className="w-full bg-red-200"></div>
+      <div className="w-[calc(100vw-400px)] bg-red-200">
+        <Routes path="/*">
+          <Route path="/booking" element={<h1>Booking</h1>}/>
+          <Route path="items" element={<h1>Items</h1>} />
+          <Route path="users" element={<h1>Users</h1>} />
+        </Routes>
+      </div>
     </div>
   );
 }
