@@ -121,28 +121,45 @@ const sampleArray = [
   },
 ];
 
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { LuCirclePlus } from "react-icons/lu";
 import { Link } from "react-router-dom";
 
 export default function AdminItemsPage() {
   const [items, setItems] = useState(sampleArray);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:3600/api/products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setItems(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <div className="w-full h-full relative">
       <table>
         <thead>
-          <th>Key</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Category</th>
-          <th>Dimensions</th>
-          <th>Availability</th>
+          <tr>
+            <th>Key</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Dimensions</th>
+            <th>Availability</th>
+          </tr>
         </thead>
         <tbody>
           {items.map((product) => {
-            console.log(product);
-
             return (
               <tr key={product.key}>
                 <td className="border p-2">{product.key}</td>
