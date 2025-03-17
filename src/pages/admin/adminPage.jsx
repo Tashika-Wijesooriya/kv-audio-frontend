@@ -4,6 +4,7 @@ import { MdOutlineSpeakerGroup } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { Route, Routes, Link } from "react-router-dom";
 import AdminItemsPage from "./adminItemsPage";
+import AddProducts from "./addProducts";
 export default function AdminPage() {
   return (
     <div className="w-full h-screen flex">
@@ -35,8 +36,9 @@ export default function AdminPage() {
       <div className="w-[calc(100vw-200px)]">
         <Routes path="/*">
           <Route path="/booking" element={<h1>Booking</h1>} />
-          
-          <Route path="items" element={<AdminItemsPage />} />
+
+          <Route path="/items" element={<AdminItemsPage />} />
+          <Route path="/items/add" element={<AddProducts />} />
           <Route path="users" element={<h1>Users</h1>} />
         </Routes>
       </div>
