@@ -20,22 +20,20 @@ export default function LoginPage() {
       return;
     }
 
-    // Set loading state while awaiting response
     setIsLoading(true);
 
-    // Make the API call
     axios
-      .post("http://localhost:3500/api/users/login", { email, password })
+      .post("http://localhost:3600/api/users/login", { email, password })
       .then((res) => {
         setIsLoading(false);
         toast.success("Login Success");
 
-        // Get the user data and redirect based on the role
-        const user = res.data.user;
+        const user = res.data.user
+        localStorage.setItem("token", res.data.token);
         if (user.role === "admin") {
-          navigate("/admin"); // Redirect to admin dashboard
+          navigate("/admin"); 
         } else {
-          navigate("/"); // Redirect to user home page
+          navigate("/"); 
         }
       })
       .catch((err) => {
