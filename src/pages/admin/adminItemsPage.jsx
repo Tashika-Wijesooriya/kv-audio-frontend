@@ -8,12 +8,13 @@ import { toast } from "react-hot-toast";
 export default function AdminItemsPage() {
   const [items, setItems] = useState([]);
   const [itemsLoaded, setItemsLoaded] = useState(false);
+  const bachendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     if (!itemsLoaded) {
       const token = localStorage.getItem("token");
       axios
-        .get("http://localhost:3600/api/products", {
+        .get(bachendUrl + "/api/products", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {

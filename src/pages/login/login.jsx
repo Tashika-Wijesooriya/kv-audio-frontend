@@ -12,6 +12,8 @@ export default function LoginPage() {
   function handleOnSubmit(e) {
     e.preventDefault();
 
+const bachendUrl = import.meta.env.VITE_BACKEND_URL;
+
     // Check if email or password are empty
     if (!email || !password) {
       toast.error("Email and password are required!");
@@ -21,7 +23,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     axios
-      .post("http://localhost:3600/api/users/login", { email, password })
+      .post(bachendUrl+"/api/users/login", { email, password })
       .then((res) => {
         setIsLoading(false);
         toast.success("Login Success");

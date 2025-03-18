@@ -6,7 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function UpdateProduct() {
   const navigate = useNavigate();
   const location = useLocation();
-  const product = location.state;
+    const product = location.state;
+    const bachendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [productKey, setProductKey] = useState(product?.key || "");
   const [productName, setProductName] = useState(product?.name || "");
@@ -37,7 +38,7 @@ export default function UpdateProduct() {
 
     try {
       await axios.put(
-        `http://localhost:3600/api/products/${productKey}`,
+        bachendUrl + `/api/products/${productKey}`,
         {
           name: productName,
           price: productPrice,

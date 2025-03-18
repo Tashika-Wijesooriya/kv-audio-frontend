@@ -12,6 +12,7 @@ export default function AddProduct() {
   const [productDescription, setProductDescription] = useState("");
 
   const navigate = useNavigate();
+  const bachendUrl = import.meta.env.VITE_BACKEND_URL;
 
   async function handleAddProduct() {
     const token = localStorage.getItem("token");
@@ -22,7 +23,7 @@ export default function AddProduct() {
 
     try {
       const result = await axios.post(
-        "http://localhost:3600/api/products",
+        bachendUrl + "/api/products",
         {
           key: productKey,
           name: productName,
