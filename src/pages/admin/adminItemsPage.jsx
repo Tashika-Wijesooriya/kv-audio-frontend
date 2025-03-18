@@ -1,183 +1,94 @@
-const sampleArray = [
-  {
-    key: "P001",
-    name: "Product 1",
-    price: 100,
-    category: "electronics",
-    dimension: "10x10x10 cm",
-    description: "A high-quality electronic product.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P002",
-    name: "Product 2",
-    price: 150,
-    category: "home appliances",
-    dimension: "15x15x15 cm",
-    description: "A reliable home appliance.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P003",
-    name: "Product 3",
-    price: 200,
-    category: "furniture",
-    dimension: "100x50x30 cm",
-    description: "A comfortable and stylish chair.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P004",
-    name: "Product 4",
-    price: 80,
-    category: "sports",
-    dimension: "5x5x5 cm",
-    description: "A durable sports accessory.",
-    availability: false,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P005",
-    name: "Product 5",
-    price: 120,
-    category: "electronics",
-    dimension: "30x20x10 cm",
-    description: "A smart gadget with advanced features.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P006",
-    name: "Product 6",
-    price: 75,
-    category: "kitchen",
-    dimension: "25x20x10 cm",
-    description: "A set of high-quality kitchen tools.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P007",
-    name: "Product 7",
-    price: 250,
-    category: "furniture",
-    dimension: "200x80x70 cm",
-    description: "A luxurious and comfortable sofa.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P008",
-    name: "Product 8",
-    price: 50,
-    category: "toys",
-    dimension: "10x10x10 cm",
-    description: "A fun and educational toy for children.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P009",
-    name: "Product 9",
-    price: 350,
-    category: "outdoor",
-    dimension: "100x100x50 cm",
-    description: "A high-end outdoor tent.",
-    availability: false,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-  {
-    key: "P010",
-    name: "Product 10",
-    price: 400,
-    category: "electronics",
-    dimension: "10x10x10 cm",
-    description: "A top-of-the-line smartphone.",
-    availability: true,
-    image: [
-      "https://i.pinimg.com/474x/8c/60/98/8c609895a1b9783451cac96f3ee5af0a.jpg",
-    ],
-  },
-];
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { LuCirclePlus } from "react-icons/lu";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 export default function AdminItemsPage() {
-  const [items, setItems] = useState(sampleArray);
+  const [items, setItems] = useState([]);
+  const {itemsLoaded, setItemsLoaded} = useState("loading");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:3600/api/products", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => {
-        setItems(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+      .then((res) => setItems(res.data))
+      .catch((err) => console.error(err));
+  }, [itemsLoaded]);
+
+  const handleDelete = (key) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      const token = localStorage.getItem("token");
+      axios
+        .delete(`http://localhost:3600/api/products/${key}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
+          setItems(items.filter((item) => item.key !== key));
+          toast.success("Item deleted successfully");
+          setItemsLoaded(!itemsLoaded);
+        })
+        .catch(() => toast.error("Failed to delete item"));
+    }
+  };
 
   return (
-    <div className="w-full h-full relative">
-      <table>
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Dimensions</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((product) => {
-            return (
-              <tr key={product.key}>
-                <td className="border p-2">{product.key}</td>
-                <td className="border p-2">{product.name}</td>
-                <td className="border p-2">{product.price}</td>
-                <td className="border p-2">{product.category}</td>
-                <td className="border p-2">{product.dimension}</td>
-                <td className="border p-2">
-                  {product.availability ? "Available" : "Out of Stock"}
+    <div className="w-full h-full p-6 bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg p-4 overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="p-3 text-left">Key</th>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Price</th>
+              <th className="p-3 text-left">Category</th>
+              <th className="p-3 text-left">Dimensions</th>
+              <th className="p-3 text-left">Availability</th>
+              <th className="p-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((product) => (
+              <tr key={product.key} className="border-b hover:bg-gray-100">
+                <td className="p-3">{product.key}</td>
+                <td className="p-3">{product.name}</td>
+                <td className="p-3">${product.price}</td>
+                <td className="p-3">{product.category}</td>
+                <td className="p-3">{product.dimension}</td>
+                <td className="p-3">
+                  <span
+                    className={
+                      product.availability ? "text-green-600" : "text-red-600"
+                    }
+                  >
+                    {product.availability ? "Available" : "Out of Stock"}
+                  </span>
+                </td>
+                <td className="p-3 text-center flex gap-4 justify-center">
+                  <Link
+                    to={`/admin/items/edit/${product.key}`}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
+                    <FiEdit size={20} />
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product.key)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FiTrash2 size={20} />
+                  </button>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Link to="/admin/items/add">
-        <LuCirclePlus className="text-[50px] absolute right-4 bottom-4 hover:text-blue-700 cursor-pointer" />
+        <LuCirclePlus className="text-[50px] fixed right-6 bottom-6 text-blue-500 hover:text-blue-700 cursor-pointer shadow-lg" />
       </Link>
     </div>
   );
