@@ -26,7 +26,7 @@ export default function AddProduct() {
         {
           key: productKey,
           name: productName,
-          price: productPrice,
+          price: parseFloat(productPrice),
           category: productCategory,
           dimension: productDimension,
           description: productDescription,
@@ -39,6 +39,7 @@ export default function AddProduct() {
       );
       toast.success(result.data.message);
       clearFields();
+      navigate("/admin/items"); // Navigate only after success
     } catch (error) {
       toast.error(
         error.response?.data.error || "An unexpected error occurred."
@@ -146,14 +147,12 @@ export default function AddProduct() {
 
         <div className="flex space-x-4 mt-6">
           <button
-            type="button"
             onClick={handleAddProduct}
             className="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md"
           >
             Add Product
           </button>
           <button
-            type="button"
             onClick={() => navigate("/admin/items")}
             className="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-400 transition duration-300 shadow-md"
           >

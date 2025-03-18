@@ -78,7 +78,8 @@ export default function AdminItemsPage() {
                   </td>
                   <td className="p-3 text-center flex gap-4 justify-center">
                     <Link
-                      to={`/admin/items/edit/${product.key}`}
+                      to={`/admin/items/edit`}
+                      state={product}
                       className="text-blue-500 hover:text-blue-700"
                     >
                       <FiEdit size={20} />
