@@ -1,0 +1,3 @@
+project URL = https://tzaueafdrqhsgnwtbzeb.supabase.co
+
+anon key = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6YXVlYWZkcnFoc2dud3RiemViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzODk4NjgsImV4cCI6MjA1Nzk2NTg2OH0.vegM211ik-YnUOAKDk6vdyyHwolCFff3VdQ9U2gY0Mg
