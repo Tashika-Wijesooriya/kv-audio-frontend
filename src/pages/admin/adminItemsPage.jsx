@@ -29,7 +29,7 @@ export default function AdminItemsPage() {
     if (window.confirm("Are you sure you want to delete this item?")) {
       const token = localStorage.getItem("token");
       axios
-        .delete(`http://localhost:3600/api/products/${key}`, {
+        .delete(bachendUrl + `/api/products/${key}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(() => {
