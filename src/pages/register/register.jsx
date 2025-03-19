@@ -17,7 +17,7 @@ export default function RegisterPage() {
   function handleOnSubmit(e) {
     e.preventDefault();
 
-    const bachendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     // Check if any field is empty
     if (!email || !password || !firstName || !lastName || !address || !phone) {
@@ -28,7 +28,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     axios
-      .post(bachendUrl + "/api/users/register", {
+      .post(`${backendUrl}/api/users`, {
         email,
         password,
         firstName,
@@ -44,7 +44,7 @@ export default function RegisterPage() {
       .catch((err) => {
         setIsLoading(false);
         console.error(err);
-        toast.error("Registration Failed. Please try again.");
+        toast.error(err?.response?.data?.error || "An error occured");
       });
   }
 
