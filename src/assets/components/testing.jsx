@@ -7,7 +7,10 @@ export default function Testing() {
 
   function uploadFile() {
     console.log(file);
-    mediaUpload(file);
+    mediaUpload(file).then((url) => {
+      console.log(url);
+    })
+      ;
   }
 
   return (
