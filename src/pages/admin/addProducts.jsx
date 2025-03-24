@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import mediaUploaded from "../../utils/mediaUpload";
 
 export default function AddProduct() {
   const [productKey, setProductKey] = useState("");
@@ -10,11 +11,25 @@ export default function AddProduct() {
   const [productCategory, setProductCategory] = useState("audio");
   const [productDimension, setProductDimension] = useState("");
   const [productDescription, setProductDescription] = useState("");
+  const [productImage, setProductImage] = useState([]);
 
   const navigate = useNavigate();
   const bachendUrl = import.meta.env.VITE_BACKEND_URL;
 
   async function handleAddProduct() {
+    console.log(productImage);
+    const promises = [];
+    for (let i = 0; i < productImage.length; i++) {
+      console.log(productImage[i]);
+      const promise = mediaUploaded(productImage[i]);
+      promises.push(promise);
+
+      // if (i == 5) {
+      //   toast.error("You can only upload 5 images at a time")
+      //   break;
+      // }
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You are not logged in");
@@ -22,6 +37,14 @@ export default function AddProduct() {
     }
 
     try {
+      // promise.all(promises).then((results) => {
+      //   console.log(results)
+      // }).catch((error) => {
+      //   console.log(error)
+      // })
+
+      const imageUrls = await Promise.all(promises);
+
       const result = await axios.post(
         bachendUrl + "/api/products",
         {
@@ -31,6 +54,7 @@ export default function AddProduct() {
           category: productCategory,
           dimension: productDimension,
           description: productDescription,
+          image: imageUrls,
         },
         {
           headers: {
@@ -142,6 +166,16 @@ export default function AddProduct() {
               value={productDescription}
               onChange={(e) => setProductDescription(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 h-24"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Images
+            </label>
+            <input
+              type="file"
+              multiple
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
         </div>
