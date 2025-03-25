@@ -1,5 +1,7 @@
 import React from "react";
-import "./productCard.css"; // Import custom CSS file for styling
+import "./productCard.css";
+// Import custom CSS file for styling
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ item }) {
   return (
@@ -29,12 +31,12 @@ export default function ProductCard({ item }) {
 
       {/* View Details Button */}
       <div className="mt-4">
-        <button
+        <Link to={"/Product/" + item.key} 
           className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
           onClick={() => alert(`Viewing details for ${item.name}`)} // Replace with actual navigation or modal logic
         >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );
