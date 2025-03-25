@@ -175,6 +175,8 @@ export default function AddProduct() {
             <input
               type="file"
               multiple
+             // onChange={(e) => setProductImage(e.target.files)}
+              onChange={(e) => setProductImage(Array.from(e.target.files))}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>

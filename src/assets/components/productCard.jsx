@@ -13,7 +13,7 @@ export default function ProductCard({ item }) {
       <h2 className="text-lg font-semibold text-gray-900 mt-4">{item.name}</h2>
       <p className="text-gray-700 text-sm mt-2">{item.description}</p>
       <div className="flex justify-between items-center mt-4">
-        <p className="font-bold text-sm text-blue-600">${item.price}</p>
+        <p className="font-bold text-sm text-blue-600">Rs:{item.price}</p>
         <span
           className={`${
             item.availability
