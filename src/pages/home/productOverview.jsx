@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ImagesSlider from "../../assets/components/imagesSlider";
+import { toast } from "react-hot-toast";
 
 export default function ProductOverview() {
   const { key } = useParams();
@@ -54,10 +55,18 @@ export default function ProductOverview() {
               <span className="font-semibold">Dimensions:</span>{" "}
               {product.dimension}
             </p>
-            <p className="text-2xl font-bold text-blue-600">${product.price}</p>
+            <p className="text-2xl font-bold text-blue-600">
+              Rs: {product.price}
+            </p>
 
             {/* Add to Cart Button */}
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300"
+              onClick={() => {
+                addToCart(product.key, 1);
+                toast.success(`${product.name} has been added to your cart!`); // Show success toast
+              }}
+            >
               Add to Cart
             </button>
           </div>

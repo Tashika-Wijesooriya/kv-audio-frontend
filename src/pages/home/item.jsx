@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import ProductCard from "../../assets/components/productCard"; 
+import ProductCard from "../../assets/components/productCard";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -26,25 +26,37 @@ export default function ProductPage() {
   }, [state]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-5">
+    <div className="min-h-screen bg-gray-50 py-12 px-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        Explore Our products
+      </h1>
+
       {state === "error" && (
-        <div className="text-center text-red-600 mb-4">{error}</div>
+        <div className="text-center text-red-600 font-semibold mb-6">
+          {error}
+        </div>
       )}
 
       {state === "loading" ? (
-        <div className="flex justify-center items-center">
-          <div className="w-16 h-16 border-4 border-t-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        <div className="flex justify-center items-center h-60">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="container mx-auto">
           {products.length > 0 ? (
-            products.map((product) => (
-              <ProductCard key={product.key} item={product} />
-            ))
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {products.map((product) => (
+                <ProductCard key={product.key} item={product} />
+              ))}
+            </ul>
           ) : (
-            <p className="text-center text-gray-500">No products available.</p>
+            <div className="flex flex-col items-center justify-center py-20">
+              <p className="text-xl text-gray-500 font-medium">
+                No products available at the moment.
+              </p>
+            </div>
           )}
-        </ul>
+        </div>
       )}
     </div>
   );
