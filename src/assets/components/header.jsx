@@ -8,6 +8,7 @@ export default function Header() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [cartItems, setCartItems] = useState(0); // Dynamic cart item count
 
+  const token = localStorage.getItem("token");
   return (
     <header className="w-full h-[80px] bg-accent shadow-xl flex justify-center items-center relative px-4">
       {/* Logo */}
@@ -34,7 +35,7 @@ export default function Header() {
       </div>
 
       {/* Desktop Cart Icon */}
-      <div className="hidden md:flex items-center absolute right-5 text-white text-xl">
+      <div className="hidden md:flex items-center absolute right-20 text-white text-xl">
         <Link to="/booking" className="relative">
           <FaShoppingCart />
           {cartItems > 0 && (
@@ -44,7 +45,17 @@ export default function Header() {
           )}
         </Link>
       </div>
-
+     {token && ( <div className="hidden md:flex items-center absolute right-5 text-white text-xl" onClick={() => 
+      {
+         localStorage.removeItem("token");
+         window.location.href = "/login";
+       }
+      }>
+        {/* Logout Icon */}
+          Logout
+        
+        
+      </div>)}
       {/* Hamburger Icon - Mobile Only */}
       <GiHamburgerMenu
         className="text-[24px] text-white absolute right-5 md:hidden"
