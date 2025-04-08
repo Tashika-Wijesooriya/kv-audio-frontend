@@ -3,18 +3,47 @@ import "./login.css";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  // Google login handler
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+      axios
+        .post(`${backendUrl}/api/users/google`, {
+          accessToken: res.access_token,
+        })
+        .then((res) => {
+          toast.success("Login Success");
+          const user = res.data.user;
+          localStorage.setItem("token", res.data.token);
+          if (user.role === "admin") {
+            navigate("/admin/");
+          } else {
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Google login failed!");
+        });
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error("Google login was cancelled or failed.");
+    },
+  });
+
+  // Regular login handler
   function handleOnSubmit(e) {
     e.preventDefault();
 
-const bachendUrl = import.meta.env.VITE_BACKEND_URL;
-
-    // Check if email or password are empty
     if (!email || !password) {
       toast.error("Email and password are required!");
       return;
@@ -23,17 +52,16 @@ const bachendUrl = import.meta.env.VITE_BACKEND_URL;
     setIsLoading(true);
 
     axios
-      .post(bachendUrl+"/api/users/login", { email, password })
+      .post(`${backendUrl}/api/users/login`, { email, password })
       .then((res) => {
         setIsLoading(false);
         toast.success("Login Success");
-
-        const user = res.data.user
+        const user = res.data.user;
         localStorage.setItem("token", res.data.token);
         if (user.role === "admin") {
-          navigate("/admin"); 
+          navigate("/admin");
         } else {
-          navigate("/"); 
+          navigate("/");
         }
       })
       .catch((err) => {
@@ -78,6 +106,13 @@ const bachendUrl = import.meta.env.VITE_BACKEND_URL;
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>
+
+          <div
+            className="my-8 w-[300px] h-[50px] bg-[#efac38] flex items-center justify-center text-white font-bold text-lg rounded-lg cursor-pointer hover:bg-[#d49a2d] transition"
+            onClick={() => googleLogin()}
+          >
+            Login with Google
+          </div>
         </div>
       </form>
     </div>

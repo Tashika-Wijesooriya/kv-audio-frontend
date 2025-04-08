@@ -1,3 +1,11 @@
 project URL = https://tzaueafdrqhsgnwtbzeb.supabase.co
 
 anon key = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6YXVlYWZkcnFoc2dud3RiemViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzODk4NjgsImV4cCI6MjA1Nzk2NTg2OH0.vegM211ik-YnUOAKDk6vdyyHwolCFff3VdQ9U2gY0Mg
+
+
+////////////////////////////
+
+
+google client id - 289643532819-pc6h9eoi8j6e3mh8793aqmfd66pucan1.apps.googleusercontent.com
+
+Client secret-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
