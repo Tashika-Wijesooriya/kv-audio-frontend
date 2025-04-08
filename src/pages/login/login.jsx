@@ -1,3 +1,4 @@
+// LoginPage.js
 import { useState } from "react";
 import "./login.css";
 import axios from "axios";
@@ -58,10 +59,15 @@ export default function LoginPage() {
         toast.success("Login Success");
         const user = res.data.user;
         localStorage.setItem("token", res.data.token);
-        if (user.role === "admin") {
-          navigate("/admin");
+
+        if (user.emailVerified === false) {
+          navigate("/verify-email");
         } else {
-          navigate("/");
+          if (user.role === "admin") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
         }
       })
       .catch((err) => {

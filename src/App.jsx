@@ -6,6 +6,7 @@ import LoginPage from "./pages/login/login";
 import toast, { Toaster } from "react-hot-toast";
 import RegisterPage from "./pages/register/register";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import VerifyEmailPage from "./pages/login/verifyEmail";
 
 
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/admin/*" element={<AdminPage />} />
 
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
           <Route path="/*" element={<HomePage />} />
