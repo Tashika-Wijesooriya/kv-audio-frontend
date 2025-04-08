@@ -6,8 +6,42 @@ import AdminItemsPage from "./adminItemsPage";
 import AddProducts from "./addProducts";
 import UpdateProduct from "./updateProductPage";
 import AdminUsersPage from "./adminUsers";
+import AdminBookingPage from "./adminBookingPage";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function AdminPage() {
+  const [userValidation, setUserValidation] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You are not authorized to access this page.");
+      window.location.href = "/";
+      return;
+    }
+
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/users/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.role === "admin") {
+          setUserValidation(true);
+        } else {
+          alert("You are not authorized to access this page.");
+          window.location.href = "/";
+        }
+      })
+      .catch((err) => {
+        console.error("Authorization failed:", err);
+        alert("An error occurred. Try again later.");
+        window.location.href = "/";
+      });
+  }, []);
+
   return (
     <div className="w-full h-screen flex bg-gray-100">
       {/* Sidebar */}
@@ -44,25 +78,20 @@ export default function AdminPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
-        <Routes>
-          <Route
-            path="/dashboard"
-            element={<h1 className="text-2xl font-semibold">Dashboard</h1>}
-          />
-          <Route
-            path="/booking"
-            element={<h1 className="text-2xl font-semibold">Booking</h1>}
-          />
-          <Route path="/items" element={<AdminItemsPage />} />
-          <Route path="/items/add" element={<AddProducts />} />
-          <Route path="/items/edit" element={<UpdateProduct />} />
-          <Route path="/users" element={<AdminUsersPage />} />
-          <Route
-            path="/users"
-            element={<h1 className="text-2xl font-semibold">Users</h1>}
-          />
-        </Routes>
+      <div className="flex-1 p-6 overflow-y-auto">
+        {userValidation && (
+          <Routes>
+            <Route
+              path="/dashboard"
+              element={<h1 className="text-2xl font-semibold">Dashboard</h1>}
+            />
+            <Route path="/booking" element={<AdminBookingPage />} />
+            <Route path="/items" element={<AdminItemsPage />} />
+            <Route path="/items/add" element={<AddProducts />} />
+            <Route path="/items/edit" element={<UpdateProduct />} />
+            <Route path="/users" element={<AdminUsersPage />} />
+          </Routes>
+        )}
       </div>
     </div>
   );
