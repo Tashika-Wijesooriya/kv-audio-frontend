@@ -42,57 +42,60 @@ export default function AdminPage() {
       });
   }, []);
 
-  return (
-    <div className="w-full h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-60 h-full bg-white shadow-md p-4 flex flex-col gap-4">
-        <h1 className="text-xl font-bold text-center text-blue-600">
-          Admin Panel
-        </h1>
-        <nav className="flex flex-col gap-3">
-          <Link
-            to="/admin/dashboard"
-            className="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-100 transition"
-          >
-            <BsGraphDown className="text-lg" /> Dashboard
-          </Link>
-          <Link
-            to="/admin/booking"
-            className="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-100 transition"
-          >
-            <FaRegBookmark className="text-lg" /> Booking
-          </Link>
-          <Link
-            to="/admin/items"
-            className="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-100 transition"
-          >
-            <MdOutlineSpeakerGroup className="text-lg" /> Items
-          </Link>
-          <Link
-            to="/admin/users"
-            className="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-100 transition"
-          >
-            <FaRegUser className="text-lg" /> Users
-          </Link>
-        </nav>
-      </div>
+ return (
+   <div className="w-full h-screen flex bg-gray-50">
+     {/* Sidebar */}
+     <div className="w-72 h-full bg-white shadow-lg p-6 flex flex-col gap-6">
+       <h1 className="text-2xl font-bold text-center text-blue-600 flex items-center justify-center gap-2">
+         <BsGraphDown className="text-xl" />
+         Dashboard
+       </h1>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        {userValidation && (
-          <Routes>
-            <Route
-              path="/dashboard"
-              element={<h1 className="text-2xl font-semibold">Dashboard</h1>}
-            />
-            <Route path="/booking" element={<AdminBookingPage />} />
-            <Route path="/items" element={<AdminItemsPage />} />
-            <Route path="/items/add" element={<AddProducts />} />
-            <Route path="/items/edit" element={<UpdateProduct />} />
-            <Route path="/users" element={<AdminUsersPage />} />
-          </Routes>
-        )}
-      </div>
-    </div>
-  );
+       <nav className="flex flex-col gap-5">
+         <Link
+           to="/admin/booking"
+           className="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-blue-200 transition duration-300 ease-in-out transform hover:scale-105"
+         >
+           <FaRegBookmark className="text-xl" />
+           Booking
+         </Link>
+         <Link
+           to="/admin/items"
+           className="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-blue-200 transition duration-300 ease-in-out transform hover:scale-105"
+         >
+           <MdOutlineSpeakerGroup className="text-xl" />
+           Items
+         </Link>
+         <Link
+           to="/admin/users"
+           className="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-blue-200 transition duration-300 ease-in-out transform hover:scale-105"
+         >
+           <FaRegUser className="text-xl" />
+           Users
+         </Link>
+       </nav>
+     </div>
+
+     {/* Main Content */}
+     <div className="flex-1 bg-gray-50 p-8 overflow-y-auto">
+       {userValidation && (
+         <Routes>
+           <Route
+             path="/dashboard"
+             element={
+               <h1 className="text-3xl font-semibold text-gray-800">
+                 Dashboard
+               </h1>
+             }
+           />
+           <Route path="/booking" element={<AdminBookingPage />} />
+           <Route path="/items" element={<AdminItemsPage />} />
+           <Route path="/items/add" element={<AddProducts />} />
+           <Route path="/items/edit" element={<UpdateProduct />} />
+           <Route path="/users" element={<AdminUsersPage />} />
+         </Routes>
+       )}
+     </div>
+   </div>
+ );
 }
