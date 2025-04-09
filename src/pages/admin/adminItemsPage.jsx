@@ -8,13 +8,13 @@ import { toast } from "react-hot-toast";
 export default function AdminItemsPage() {
   const [items, setItems] = useState([]);
   const [itemsLoaded, setItemsLoaded] = useState(false);
-  const bachendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     if (!itemsLoaded) {
       const token = localStorage.getItem("token");
       axios
-        .get(bachendUrl + "/api/products", {
+        .get(backendUrl + "/api/products", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -29,7 +29,7 @@ export default function AdminItemsPage() {
     if (window.confirm("Are you sure you want to delete this item?")) {
       const token = localStorage.getItem("token");
       axios
-        .delete(bachendUrl + `/api/products/${key}`, {
+        .delete(backendUrl + `/api/products/${key}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(() => {
@@ -41,67 +41,119 @@ export default function AdminItemsPage() {
   };
 
   return (
-    <div className="w-full h-full p-6 bg-gray-100 flex flex-col items-center">
-      {!itemsLoaded && (
-        <div className="border-4 border-indigo-300 border-t-transparent rounded-full w-[50px] h-[50px] animate-spin mb-4"></div>
-      )}
-
-      {itemsLoaded && (
-        <div className="bg-white shadow-lg rounded-lg p-4 overflow-x-auto w-full">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="p-3 text-left">Key</th>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Price</th>
-                <th className="p-3 text-left">Category</th>
-                <th className="p-3 text-left">Dimensions</th>
-                <th className="p-3 text-left">Availability</th>
-                <th className="p-3 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((product) => (
-                <tr key={product.key} className="border-b hover:bg-gray-100">
-                  <td className="p-3">{product.key}</td>
-                  <td className="p-3">{product.name}</td>
-                  <td className="p-3">Rs. {product.price}</td>
-                  <td className="p-3">{product.category}</td>
-                  <td className="p-3">{product.dimension}</td>
-                  <td className="p-3">
-                    <span
-                      className={
-                        product.availability ? "text-green-600" : "text-red-600"
-                      }
-                    >
-                      {product.availability ? "Available" : "Out of Stock"}
-                    </span>
-                  </td>
-                  <td className="p-3 text-center flex gap-4 justify-center">
-                    <Link
-                      to={`/admin/items/edit`}
-                      state={product}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      <FiEdit size={20} />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(product.key)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <FiTrash2 size={20} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="min-h-screen p-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Product Management
+          </h1>
+          <Link
+            to="/admin/items/add"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <LuCirclePlus className="w-5 h-5" />
+            Add New Product
+          </Link>
         </div>
-      )}
 
-      <Link to="/admin/items/add">
-        <LuCirclePlus className="text-[50px] fixed right-6 bottom-6 text-blue-500 hover:text-blue-700 cursor-pointer shadow-lg" />
-      </Link>
+        {!itemsLoaded ? (
+          <div className="flex justify-center items-center h-96">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-blue-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Key
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Product
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Dimensions
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {items.map((product) => (
+                  <tr
+                    key={product.key}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {product.key}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {product.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      Rs:{product.price}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {product.category}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {product.dimension}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                          product.availability
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {product.availability ? "Available" : "Out of Stock"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center space-x-4">
+                        <Link
+                          to={`/admin/items/edit`}
+                          state={product}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Edit"
+                        >
+                          <FiEdit className="w-5 h-5" />
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(product.key)}
+                          className="text-red-600 hover:text-red-900"
+                          title="Delete"
+                        >
+                          <FiTrash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {items.length === 0 && itemsLoaded && (
+          <div className="text-center py-12 bg-white rounded-lg border border-gray-200 mt-4">
+            <p className="text-gray-500">
+              No products found. Add your first product!
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

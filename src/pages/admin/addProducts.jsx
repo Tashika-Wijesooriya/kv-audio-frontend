@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import mediaUploaded from "../../utils/mediaUpload";
+import { FiUploadCloud, FiBox, FiX } from "react-icons/fi";
 
 export default function AddProduct() {
   const [productKey, setProductKey] = useState("");
@@ -14,22 +15,10 @@ export default function AddProduct() {
   const [productImage, setProductImage] = useState([]);
 
   const navigate = useNavigate();
-  const bachendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  // Handle form submission
   async function handleAddProduct() {
-    console.log(productImage);
-    const promises = [];
-    for (let i = 0; i < productImage.length; i++) {
-      console.log(productImage[i]);
-      const promise = mediaUploaded(productImage[i]);
-      promises.push(promise);
-
-      // if (i == 5) {
-      //   toast.error("You can only upload 5 images at a time")
-      //   break;
-      // }
-    }
-
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You are not logged in");
@@ -37,16 +26,11 @@ export default function AddProduct() {
     }
 
     try {
-      // promise.all(promises).then((results) => {
-      //   console.log(results)
-      // }).catch((error) => {
-      //   console.log(error)
-      // })
+      const uploadPromises = productImage.map((img) => mediaUploaded(img));
+      const imageUrls = await Promise.all(uploadPromises);
 
-      const imageUrls = await Promise.all(promises);
-
-      const result = await axios.post(
-        bachendUrl + "/api/products",
+      const { data } = await axios.post(
+        `${backendUrl}/api/products`,
         {
           key: productKey,
           name: productName,
@@ -57,14 +41,13 @@ export default function AddProduct() {
           image: imageUrls,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      toast.success(result.data.message);
+
+      toast.success(data.message);
       clearFields();
-      navigate("/admin/items"); // Navigate only after success
+      navigate("/admin/items");
     } catch (error) {
       toast.error(
         error.response?.data.error || "An unexpected error occurred."
@@ -72,6 +55,7 @@ export default function AddProduct() {
     }
   }
 
+  // Clear input fields
   const clearFields = () => {
     setProductKey("");
     setProductName("");
@@ -79,122 +63,200 @@ export default function AddProduct() {
     setProductCategory("audio");
     setProductDimension("");
     setProductDescription("");
+    setProductImage([]);
+  };
+
+  const removeImage = (index) => {
+    setProductImage((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-indigo-200 flex items-center justify-center p-6">
-      <div className="max-w-2xl w-full bg-white rounded-xl shadow-xl overflow-hidden p-8 border border-gray-300">
-        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
-          Add New Product
-        </h1>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Key
-            </label>
-            <input
-              type="text"
-              placeholder="PRD-12345"
-              value={productKey}
-              onChange={(e) => setProductKey(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-10 border border-gray-200">
+          {/* Heading */}
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-extrabold text-gray-900">
+              Add New Product
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              Fill in the details below to create a new product listing
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter product name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+          {/* Product Information */}
+          <div className="space-y-6 divide-y divide-gray-200">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Product Key */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Key <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={productKey}
+                    onChange={(e) => setProductKey(e.target.value)}
+                    className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                    placeholder="PRD-12345"
+                    required
+                  />
+                </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price (Rs: )
-              </label>
-              <input
-                type="number"
-                placeholder="0.00"
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
+                {/* Product Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                    placeholder="Enter product name"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Price */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Price (Rs) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={productPrice}
+                    onChange={(e) => setProductPrice(e.target.value)}
+                    className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={productCategory}
+                      onChange={(e) => setProductCategory(e.target.value)}
+                      className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                    >
+                      <option value="audio">Audio Equipment</option>
+                      <option value="lights">Lighting Systems</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <FiBox className="h-5 w-5 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dimensions */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Dimensions
+                </label>
+                <input
+                  type="text"
+                  value={productDimension}
+                  onChange={(e) => setProductDimension(e.target.value)}
+                  className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                  placeholder="e.g., 10x20x30 cm"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={productDescription}
+                  onChange={(e) => setProductDescription(e.target.value)}
+                  rows="4"
+                  className="block w-full px-4 py-3 border border-blue-500 rounded-lg focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                  placeholder="Detailed product description..."
+                  required
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
+            {/* Image Upload Section */}
+            <div className="pt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-4">
+                Product Images (Max 5)
               </label>
-              <select
-                value={productCategory}
-                onChange={(e) => setProductCategory(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="audio">Audio</option>
-                <option value="lights">Lights</option>
-              </select>
+              <div className="mt-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 transition hover:border-blue-500">
+                <FiUploadCloud className="w-12 h-12 text-gray-400 mb-4" />
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">
+                    Drag and drop images here, or{" "}
+                    <span className="text-blue-600 font-medium">
+                      click to browse
+                    </span>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    PNG, JPG up to 5MB
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => setProductImage(Array.from(e.target.files))}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer mt-4 bg-white text-blue-600 px-4 py-2 rounded-md border border-blue-600 hover:bg-blue-50 transition-colors"
+                >
+                  Select Files
+                </label>
+              </div>
+
+              {/* Image Previews */}
+              {productImage.length > 0 && (
+                <div className="mt-6 grid grid-cols-3 gap-4">
+                  {productImage.map((file, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow-sm border border-gray-200"
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                      >
+                        <FiX className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Dimensions
-            </label>
-            <input
-              type="text"
-              placeholder="e.g., 10x20x30 cm"
-              value={productDimension}
-              onChange={(e) => setProductDimension(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
+          {/* Action Buttons */}
+          <div className="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4">
+            <button
+              onClick={() => navigate("/admin/items")}
+              className="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAddProduct}
+              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              Create Product
+            </button>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              placeholder="Enter product description"
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 h-24"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Images
-            </label>
-            <input
-              type="file"
-              multiple
-             // onChange={(e) => setProductImage(e.target.files)}
-              onChange={(e) => setProductImage(Array.from(e.target.files))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex space-x-4 mt-6">
-          <button
-            onClick={handleAddProduct}
-            className="flex-1 bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md"
-          >
-            Add Product
-          </button>
-          <button
-            onClick={() => navigate("/admin/items")}
-            className="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-400 transition duration-300 shadow-md"
-          >
-            Cancel
-          </button>
         </div>
       </div>
     </div>
