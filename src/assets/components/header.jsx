@@ -44,18 +44,19 @@ export default function Header() {
             </span>
           )}
         </Link>
-      </div>
-     {token && ( <div className="hidden md:flex items-center absolute right-5 text-white text-xl" onClick={() => 
-      {
-         localStorage.removeItem("token");
-         window.location.href = "/login";
-       }
-      }>
-        {/* Logout Icon */}
+      </div><br></br><br></br>
+      {token && (
+        <div
+          className="hidden md:flex items-center absolute right-5 text-white text-xl"
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }}
+        >
+          {/* Logout Icon */}
           Logout
-        
-        
-      </div>)}
+        </div>
+      )}
       {/* Hamburger Icon - Mobile Only */}
       <GiHamburgerMenu
         className="text-[24px] text-white absolute right-5 md:hidden"
